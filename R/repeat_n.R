@@ -14,16 +14,47 @@
 #' @importFrom dplyr bind_rows
 
 repeat_n <- function(expr, n = 1,
-                     cull = "default", combine = "default",
+                     cull = cull_for_repeat, combine = combine_for_repeat,
                      names = NULL, ...) {
-  if (is.character(cull) && cull == "default") {
-    cull <- function(x) x
-  }
-  if (is.character(combine) && combine == "default") {
-    combine <- function(x) dplyr::bind_rows(x)
-  }
   qexpr <- rlang::quo(expr)
-  results <- lapply( integer(n), function(...) { rlang::eval_tidy(qexpr) } )
-  results <- lapply(results, cull)
+  results <- if("package:parallel" %in% search() ) {
+    parallel::mclapply( integer(n), function(...) { cull(rlang::eval_tidy(qexpr)) } )
+  } else {
+    lapply( integer(n), function(...) { cull(rlang::eval_tidy(qexpr)) } )
+  }
   combine(results)
+}
+
+#' @export
+cull_for_repeat <- function(object, ...) {
+  UseMethod("cull_for_repeat")
+}
+
+#' @export
+cull_for_repeat.default <- function(object, ...) {
+  object
+}
+
+#' @export
+cull_for_repeat.cointoss <- function(object, ...) {
+  return( data.frame(n=attr(object,'n'),
+                     heads=sum(attr(object,'sequence')=='H'),
+                     tails=sum(attr(object,'sequence')=='T'),
+                     prop=sum(attr(object,'sequence')=="H") / attr(object,'n')
+  ) )
+}
+
+#' @export
+combine_for_repeat <- function(object, ...) {
+  UseMethod("combine_for_repeat")
+}
+
+#' @export
+combine_for_repeat.default <- function(object, ...) {
+  object
+}
+
+#' @export
+combine_for_repeat.list <- function(object, ...) {
+  dplyr::bind_rows(object)
 }

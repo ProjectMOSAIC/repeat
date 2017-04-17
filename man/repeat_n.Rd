@@ -4,8 +4,8 @@
 \alias{repeat_n}
 \title{Replication for randomization and resampling}
 \usage{
-repeat_n(expr, n = 1, cull = "default", combine = "default",
-  names = NULL, ...)
+repeat_n(expr, n = 1, cull = cull_for_repeat,
+  combine = combine_for_repeat, names = NULL, ...)
 }
 \arguments{
 \item{expr}{and expression to be repeated}
