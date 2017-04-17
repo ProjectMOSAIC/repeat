@@ -1,0 +1,22 @@
+Package: repeatR
+Type: Package
+Title: Chaining replication opearations
+Version: 0.1.9000
+Date: 2016-04-17
+Depends:
+Imports:
+    magrittr,
+    rlang,
+    dplyr
+VignetteBuilder: knitr
+Author: Randall Pruim <rpruim@calvin.edu>, Daniel T. Kaplan
+    <kaplan@macalester.edu>, Nicholas J. Horton <nhorton@amherst.edu>
+Maintainer: Randall Pruim <rpruim@calvin.edu>
+Description: This package provides a chainable operator for randomization 
+    resampling repetition.
+License: GPL (>=2)
+LazyLoad: yes
+LazyData: yes
+URL: https://github.com/ProjectMOSAIC/repeat
+BugReports: https://github.com/ProjectMOSAIC/repeat/issues
+RoxygenNote: 6.0.1
